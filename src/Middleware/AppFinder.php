@@ -36,14 +36,14 @@ class AppFinder implements MiddlewareInterface
         $this->registry = $registry;
     }
     /**
-    * Rebuild a path string to a common form
-    *
-    * Remove any . and .. levels and parts made irrelevant by them
-    *
-    * @param string $path The input path
-    *
-    * @return string The normalized path
-    */
+     * Rebuild a path string to a common form
+     *
+     * Remove any . and .. levels and parts made irrelevant by them
+     *
+     * @param string $path The input path
+     *
+     * @return string The normalized path
+     */
     protected function _normalize(string $path): string
     {
         $partsIn = explode('/', $path);
@@ -91,10 +91,10 @@ class AppFinder implements MiddlewareInterface
             $path = $request->getUri()->getPath();
 
             $default = [
-               'scheme' => $scheme,
-               'host' => $host,
-               'path' => '',
-               'app' => $app,
+                'scheme' => $scheme,
+                'host' => $host,
+                'path' => '',
+                'app' => $app,
             ];
 
             $applicationUrl = array_merge($default, parse_url($registry->get('webroot', $app)));
@@ -152,12 +152,13 @@ class AppFinder implements MiddlewareInterface
         $registry = $request->getAttribute('registry');
 
         $found = $this->identifyApp($request, $registry);
-        $prefix = $found['path'];
 
         // If we still found no app, give up
         if (empty($found)) {
-            throw new \Exception("No App found for this path");
+            $path = $request->getUri()->getPath();
+            throw new \Exception("No App found for path: $path");
         }
+        $prefix = $found['path'];
 
         // Route mapper doesn't like / as prefix
         if ($prefix == '/') {
