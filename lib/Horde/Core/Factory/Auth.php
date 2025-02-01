@@ -1,4 +1,5 @@
 <?php
+
 /**
  * A Horde_Injector:: based Horde_Auth:: factory.
  *
@@ -109,6 +110,17 @@ class Horde_Core_Factory_Auth extends Horde_Core_Factory_Base
             }
             break;
 
+        case 'horde_auth_fallback':
+            // Both of these params are required, but we need to skip if
+            // non-existent to return a useful error message later.
+            if (!empty($params['primary_driver'])) {
+                $params['primary_driver'] = $this->_create($params['primary_driver']['driver'], $params['primary_driver']['params']);
+            }
+            if (!empty($params['fallback_driver'])) {
+                $params['fallback_driver'] = $this->_create($params['fallback_driver']['driver'], $params['fallback_driver']['params']);
+            }
+            break;
+
         case 'horde_auth_cyrsql':
             $imap_config = array(
                 'hostspec' => empty($params['cyrhost']) ? null : $params['cyrhost'],
@@ -188,5 +200,4 @@ class Horde_Core_Factory_Auth extends Horde_Core_Factory_Base
 
         return $auth_ob;
     }
-
 }
