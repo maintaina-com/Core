@@ -128,10 +128,12 @@ class Horde_Core_Auth_Application extends Horde_Auth_Base
             return false;
         }
 
-        try {
-            list($userId, $credentials) = $this->runHook(trim($userId), $credentials, 'preauthenticate', 'authenticate');
-         } catch (Horde_Auth_Exception $e) {
-            return false;
+        if ($login) {
+            try {
+                list($userId, $credentials) = $this->runHook(trim($userId), $credentials, 'preauthenticate', 'authenticate');
+             } catch (Horde_Auth_Exception $e) {
+                return false;
+            }
         }
 
         if ($this->_base) {
@@ -141,7 +143,9 @@ class Horde_Core_Auth_Application extends Horde_Auth_Base
         } elseif (!parent::authenticate($userId, $credentials, $login)) {
             return false;
         }
-
+        if (!$login) {
+            return true;
+        }
         /* Remember the user's mode choice, if applicable. */
         if (!empty($credentials['mode'])) {
             $this->_view = $credentials['mode'];
