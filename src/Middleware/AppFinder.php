@@ -96,7 +96,7 @@ class AppFinder implements MiddlewareInterface
         $matches = [];
         $scheme = $request->getUri()->getScheme();
         $host = $request->getUri()->getHost();
-        $path = $request->getUri()->getPath();
+        $path = $this->_normalize($request->getUri()->getPath());
         // listApps() would return empty on unauthenticated access
         foreach ($registry->listApps(null, true, null) as $app => $config) {
             $default = [
